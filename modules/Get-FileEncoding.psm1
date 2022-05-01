@@ -7,9 +7,9 @@ The accuracy of this method is low, since this method only works with text files
 .EXAMPLE
 Get-FileEncoding 'C:\Temp\test.txt'
 .EXAMPLE
-Get-ChildItem 'C:\Temp' | Get-FileEncoding
+Get-Item 'C:\Temp\*.txt' | Get-FileEncoding
 .EXAMPLE
-Get-ChildItem 'C:\Temp' | Get-FileEncoding -Alternative
+Get-Item 'C:\Temp\*.txt' | Get-FileEncoding -Alternative
 #>
 
 function Get-FileEncoding {
