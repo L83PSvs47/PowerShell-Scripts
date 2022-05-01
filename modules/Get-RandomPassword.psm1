@@ -53,6 +53,7 @@ function Get-RandomPassword {
         2 { $complexLength = 2 }
         3 { $complexLength = 4 }
         4 { $complexLength = 6 }
+        Default {}
     }
 
     if ($Length -lt $complexLength) {
