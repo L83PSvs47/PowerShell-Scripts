@@ -23,13 +23,12 @@ function Get-FileEncoding {
     )
 
     process {
-        if ($Alternate) {
+        if ($Alternative) {
             [byte[]]$bytes = 0
-            if ($null -ne (Get-Content $Path.FullName)) {
+            if ($null -ne (Get-Content $Path.FullName -Encoding byte -ReadCount 4 -TotalCount 4)) {
                 $bytes = (Get-Content $Path.FullName -Encoding byte -ReadCount 4 -TotalCount 4)
             }
 
-            if (!$bytes) { $encoding = 'utf-8' }
             switch -regex ('{0:x2}{1:x2}{2:x2}{3:x2}' -f $bytes[0], $bytes[1], $bytes[2], $bytes[3]) {
                 '^efbbbf' { $encoding = 'utf-8' }
                 '^2b2f76' { $encoding = 'utf-7' }
@@ -37,7 +36,7 @@ function Get-FileEncoding {
                 '^fffe' { $encoding = 'utf-16' }
                 '^0000feff' { $encoding = 'utf-32BE' }
                 '^fffe0000' { $encoding = 'utf-32' }
-                default { $encoding = 'ascii' }
+                Default { $encoding = 'ascii' }
             }
 
             $result = [PSCustomObject]@{
