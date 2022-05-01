@@ -7,16 +7,16 @@ The accuracy of this method is low, since this method only works with text files
 .EXAMPLE
 Get-FileEncoding 'C:\Temp\test.txt'
 .EXAMPLE
-(Get-ChildItem C:\Temp).FullName | Get-FileEncoding
+Get-ChildItem 'C:\Temp' | Get-FileEncoding
 .EXAMPLE
-(Get-ChildItem C:\Temp).FullName | Get-FileEncoding -Alternative
+Get-ChildItem 'C:\Temp' | Get-FileEncoding -Alternative
 #>
 
 function Get-FileEncoding {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory, ValueFromPipeline)]
-        [string]$Path,
+        [System.IO.FileInfo]$Path,
 
         [Parameter(ValueFromPipeline)]
         [switch]$Alternative
@@ -25,8 +25,8 @@ function Get-FileEncoding {
     process {
         if ($Alternate) {
             [byte[]]$bytes = 0
-            if ($null -ne (Get-Content $Path)) {
-                $bytes = (Get-Content $Path -Encoding byte -ReadCount 4 -TotalCount 4)
+            if ($null -ne (Get-Content $Path.FullName)) {
+                $bytes = (Get-Content $Path.FullName -Encoding byte -ReadCount 4 -TotalCount 4)
             }
 
             if (!$bytes) { $encoding = 'utf-8' }
@@ -46,7 +46,7 @@ function Get-FileEncoding {
             }
         }
         else {
-            $reader = [System.IO.StreamReader]::new($Path, [System.Text.Encoding]::Default, $true)
+            $reader = [System.IO.StreamReader]::new($Path.FullName, [System.Text.Encoding]::Default, $true)
             $peek = $reader.Peek()
             $encoding = $reader.CurrentEncoding
             $reader.Close()
