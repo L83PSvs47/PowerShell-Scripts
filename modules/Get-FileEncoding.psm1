@@ -23,37 +23,40 @@ function Get-FileEncoding {
     )
 
     process {
-        if ($Alternative) {
-            [byte[]]$bytes = 0
-            if ($null -ne (Get-Content $Path.FullName -Encoding byte -ReadCount 4 -TotalCount 4)) {
-                $bytes = (Get-Content $Path.FullName -Encoding byte -ReadCount 4 -TotalCount 4)
-            }
+        switch ($Alternative) {
+            $false {
+                $reader = [System.IO.StreamReader]::new($Path.FullName, [System.Text.Encoding]::Default, $true)
+                $peek = $reader.Peek()
+                $encoding = $reader.CurrentEncoding
+                $reader.Close()
 
-            switch -regex ('{0:x2}{1:x2}{2:x2}{3:x2}' -f $bytes[0], $bytes[1], $bytes[2], $bytes[3]) {
-                '^efbbbf' { $encoding = 'utf-8' }
-                '^2b2f76' { $encoding = 'utf-7' }
-                '^feff' { $encoding = 'utf-16BE' }
-                '^fffe' { $encoding = 'utf-16' }
-                '^0000feff' { $encoding = 'utf-32BE' }
-                '^fffe0000' { $encoding = 'utf-32' }
-                Default { $encoding = 'ascii' }
+                $result = [PSCustomObject]@{
+                    'Name'     = Split-Path $Path -leaf
+                    'Encoding' = $encoding.BodyName
+                }
             }
+            $true {
+                [byte[]]$bytes = 0
+                if ($null -ne (Get-Content $Path.FullName -Encoding byte -ReadCount 4 -TotalCount 4)) {
+                    $bytes = (Get-Content $Path.FullName -Encoding byte -ReadCount 4 -TotalCount 4)
+                }
 
-            $result = [PSCustomObject]@{
-                'Name'     = Split-Path $Path -leaf
-                'Encoding' = $encoding
-            }
-        }
-        else {
-            $reader = [System.IO.StreamReader]::new($Path.FullName, [System.Text.Encoding]::Default, $true)
-            $peek = $reader.Peek()
-            $encoding = $reader.CurrentEncoding
-            $reader.Close()
+                switch -regex ('{0:x2}{1:x2}{2:x2}{3:x2}' -f $bytes[0], $bytes[1], $bytes[2], $bytes[3]) {
+                    '^efbbbf' { $encoding = 'utf-8' }
+                    '^2b2f76' { $encoding = 'utf-7' }
+                    '^feff' { $encoding = 'utf-16BE' }
+                    '^fffe' { $encoding = 'utf-16' }
+                    '^0000feff' { $encoding = 'utf-32BE' }
+                    '^fffe0000' { $encoding = 'utf-32' }
+                    Default { $encoding = 'ascii' }
+                }
 
-            $result = [PSCustomObject]@{
-                'Name'     = Split-Path $Path -leaf
-                'Encoding' = $encoding.BodyName
+                $result = [PSCustomObject]@{
+                    'Name'     = Split-Path $Path -leaf
+                    'Encoding' = $encoding
+                }
             }
+            Default {}
         }
 
         return $result
