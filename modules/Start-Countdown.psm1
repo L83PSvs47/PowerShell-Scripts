@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
 Provide a graphical countdown if you need to pause a script for a period of time
 .EXAMPLE
