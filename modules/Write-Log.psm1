@@ -16,7 +16,7 @@ function Write-Log {
         [string]$Message,
 
         [Parameter()]
-        [ValidateSet('Head', 'Step', 'Info', 'Warning', 'Error')]
+        [ValidateSet('Head', 'Step', 'Info', 'Success', 'Warning', 'Error')]
         [string]$Level,
 
         [Parameter()]
@@ -33,14 +33,12 @@ function Write-Log {
 
     [string]$consoleMessage = $Message -Replace "`t", ' '
     switch ($Level) {
-        'HEAD' {
-            Write-Host ''
-            Write-Host "$consoleMessage" -ForegroundColor Gray
-        }
-        'STEP' { Write-Host $consoleMessage -ForegroundColor Cyan }
-        'INFO' { Write-Host $consoleMessage -ForegroundColor Green }
-        'WARNING' { Write-Host $consoleMessage -ForegroundColor Yellow }
-        'ERROR' { Write-Host $consoleMessage -ForegroundColor Red }
+        'Head' { Write-Host "`n$consoleMessage" -ForegroundColor DarkGray }
+        'Step' { Write-Host $consoleMessage -ForegroundColor DarkCyan }
+        'Info' { Write-Host $consoleMessage -ForegroundColor DarkGreen }
+        'Success' { Write-Host $consoleMessage -ForegroundColor Green }
+        'Warning' { Write-Host $consoleMessage -ForegroundColor Yellow }
+        'Error' { Write-Host $consoleMessage -ForegroundColor Red }
         Default { Write-Host $consoleMessage }
     }
 }

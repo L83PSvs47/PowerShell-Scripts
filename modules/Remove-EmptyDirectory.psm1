@@ -13,19 +13,21 @@ function Remove-EmptyDirectory {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory)]
-        [string]$Path,
+        [System.IO.DirectoryInfo]$Path,
 
         [parameter()]
         [switch]$WhatIf
     )
 
-    foreach ($childDirectory in Get-ChildItem -Path $Path -Force -Directory) {
-        Remove-EmptyDirectory -Path $childDirectory.FullName -WhatIf:$WhatIf
-    }
+    if (Test-Path $Path -PathType Container) {
+        foreach ($childDirectory in Get-ChildItem -Path $Path -Force -Directory) {
+            Remove-EmptyDirectory -Path $childDirectory.FullName -WhatIf:$WhatIf
+        }
 
-    [System.Object]$childItems = Get-ChildItem -Path $Path -Force
-    if ($null -eq $childItems) {
-        Write-Verbose -Message "Removing empty folder $Path"
-        Remove-Item -Path $Path -Recurse -Force -WhatIf:$WhatIf
+        [System.Object]$childItems = Get-ChildItem -Path $Path -Force
+        if ($null -eq $childItems) {
+            Write-Verbose -Message "Removing empty folder $Path"
+            Remove-Item -Path $Path -Recurse -Force -WhatIf:$WhatIf
+        }
     }
 }

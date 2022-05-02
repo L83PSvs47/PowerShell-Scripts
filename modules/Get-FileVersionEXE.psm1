@@ -17,21 +17,23 @@ function Get-FileVersionEXE {
     )
 
     process {
-        try {
-            $productVersion = (Get-Item $Path.FullName).VersionInfo.ProductVersion
-            $fileVersion = (Get-Item $Path.FullName).VersionInfo.FileVersion
-        }
-        catch {
-            $productVersion = '-'
-            $fileVersion = '-'
-        }
+        if (($Path.FullName -like '*.exe') -or ($Path.FullName -like '*.dll')) {
+            try {
+                $productVersion = (Get-Item $Path.FullName).VersionInfo.ProductVersion
+                $fileVersion = (Get-Item $Path.FullName).VersionInfo.FileVersion
+            }
+            catch {
+                $productVersion = '-'
+                $fileVersion = '-'
+            }
 
-        $result = [PSCustomObject]@{
-            'Name'           = Split-Path $Path -leaf
-            'ProductVersion' = $productVersion
-            'FileVersion'    = $fileVersion
-        }
+            $result = [PSCustomObject]@{
+                'Name'           = Split-Path $Path -leaf
+                'ProductVersion' = $productVersion
+                'FileVersion'    = $fileVersion
+            }
 
-        return $result
+            return $result
+        }
     }
 }

@@ -8,6 +8,8 @@ The Get-DateTimeOffset module is required to work
 .EXAMPLE
 Clear-Directory 'C:\Temp' '-1d'
 .EXAMPLE
+Clear-Directory 'C:\Temp\temp.txt' '-1d'
+.EXAMPLE
 Clear-Directory 'C:\Temp' '-7d' -Exclude '*.log', '*.txt' -Verbose
 .EXAMPLE
 Clear-Directory -Path 'C:\Temp' -Retention '-1M' -WhatIf
@@ -17,10 +19,10 @@ function Clear-Directory {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory)]
-        [string]$Path,
+        [System.IO.DirectoryInfo]$Path,
 
-        [Parameter(Mandatory)]
-        [string]$Retention,
+        [Parameter()]
+        [string]$Retention = '-100y',
 
         [Parameter()]
         [array]$Exclude,
