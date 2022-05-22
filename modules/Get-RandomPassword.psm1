@@ -1,6 +1,6 @@
 ﻿<#
 .SYNOPSIS
-Generate random Password
+Generate random password
 .DESCRIPTION
 Complexity:
 1 = Upper-case = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'

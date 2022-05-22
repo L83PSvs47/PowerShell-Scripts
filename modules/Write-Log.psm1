@@ -20,7 +20,7 @@ function Write-Log {
         [string]$Level,
 
         [Parameter()]
-        [string]$LogPath
+        [System.IO.FileInfo]$LogPath
     )
 
     [string]$dateTime = (Get-Date).toString('dd.MM.yyyy HH:mm:ss')

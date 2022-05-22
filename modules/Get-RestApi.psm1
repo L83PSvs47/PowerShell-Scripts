@@ -27,7 +27,7 @@ function Get-RestApi {
         [SecureString]$Password,
 
         [Parameter()]
-        [string]$OutFile
+        [System.IO.FileInfo]$OutFile
     )
 
     [string]$unsecurePassword = $null
