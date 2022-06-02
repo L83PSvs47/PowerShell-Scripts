@@ -46,11 +46,11 @@ function Clear-Directory {
             }
             else {
                 if ($item.LastWriteTime -lt (Get-DateTimeOffset -DateTime $(Get-Date) -Offset $Retention)) {
-                    Write-Verbose "$($item.LastAccessTime) Delete:`t$($item.FullName)"
+                    Write-Verbose -Message "$($item.LastAccessTime) Delete:`t$($item.FullName)"
                     Remove-Item -Path $item.FullName -Force -WhatIf:$WhatIf
                 }
                 else {
-                    Write-Verbose "$($item.LastAccessTime) Skip:`t$($item.FullName)"
+                    Write-Verbose -Message "$($item.LastAccessTime) Skip:`t$($item.FullName)"
                 }
             }
         }

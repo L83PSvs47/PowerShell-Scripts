@@ -19,7 +19,7 @@ function Remove-EmptyDirectory {
         [switch]$WhatIf
     )
 
-    if (Test-Path $Path -PathType Container) {
+    if (Test-Path -Path $Path -PathType Container) {
         foreach ($childDirectory in Get-ChildItem -Path $Path -Force -Directory) {
             Remove-EmptyDirectory -Path $childDirectory.FullName -WhatIf:$WhatIf
         }

@@ -23,7 +23,7 @@ function Get-FileEncoding {
     )
 
     process {
-        if (Test-Path $Path -PathType Leaf) {
+        if (Test-Path -Path $Path -PathType Leaf) {
             switch ($Alternative) {
                 $false {
                     $reader = [System.IO.StreamReader]::new($Path.FullName, [System.Text.Encoding]::Default, $true)
@@ -32,14 +32,14 @@ function Get-FileEncoding {
                     $reader.Close()
 
                     $result = [PSCustomObject]@{
-                        'Name'     = Split-Path $Path -leaf
+                        'Name'     = Split-Path -Path $Path -Leaf
                         'Encoding' = $encoding.BodyName
                     }
                 }
                 $true {
                     [byte[]]$bytes = 0
-                    if ($null -ne (Get-Content $Path.FullName -Encoding byte -ReadCount 4 -TotalCount 4)) {
-                        $bytes = (Get-Content $Path.FullName -Encoding byte -ReadCount 4 -TotalCount 4)
+                    if ($null -ne (Get-Content -Path $Path.FullName -Encoding Byte -ReadCount 4 -TotalCount 4)) {
+                        $bytes = (Get-Content -Path $Path.FullName -Encoding Byte -ReadCount 4 -TotalCount 4)
                     }
 
                     switch -regex ('{0:x2}{1:x2}{2:x2}{3:x2}' -f $bytes[0], $bytes[1], $bytes[2], $bytes[3]) {
@@ -53,7 +53,7 @@ function Get-FileEncoding {
                     }
 
                     $result = [PSCustomObject]@{
-                        'Name'     = Split-Path $Path -leaf
+                        'Name'     = Split-Path -Path $Path -Leaf
                         'Encoding' = $encoding
                     }
                 }

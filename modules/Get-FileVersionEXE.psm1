@@ -19,8 +19,8 @@ function Get-FileVersionEXE {
     process {
         if (($Path.FullName -like '*.exe') -or ($Path.FullName -like '*.dll')) {
             try {
-                $productVersion = (Get-Item $Path.FullName).VersionInfo.ProductVersion
-                $fileVersion = (Get-Item $Path.FullName).VersionInfo.FileVersion
+                $productVersion = (Get-Item -Path $Path.FullName).VersionInfo.ProductVersion
+                $fileVersion = (Get-Item -Path $Path.FullName).VersionInfo.FileVersion
             }
             catch {
                 $productVersion = '-'
@@ -28,7 +28,7 @@ function Get-FileVersionEXE {
             }
 
             $result = [PSCustomObject]@{
-                'Name'           = Split-Path $Path -leaf
+                'Name'           = Split-Path -Path $Path -Leaf
                 'ProductVersion' = $productVersion
                 'FileVersion'    = $fileVersion
             }

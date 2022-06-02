@@ -70,7 +70,7 @@ function Send-Message {
 
     try {
         $emailClient.Send($email)
-        Write-Host "Сообщение успешно отправлено"
+        Write-Host "Сообщение отправлено"
     }
     catch {
         Write-Host "Сообщение не отправлено.`nОшибка: $($_.Exception.Message)"

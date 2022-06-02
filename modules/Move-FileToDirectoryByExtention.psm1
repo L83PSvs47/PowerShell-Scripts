@@ -17,14 +17,14 @@ function Move-FileToDirectoryByExtention {
     )
 
     process {
-        if (Test-Path $Path -PathType Leaf) {
+        if (Test-Path -Path $Path -PathType Leaf) {
             $directory = "$($Path.Directory)\$($Path.Extension.Replace('.', ''))"
-            if (! (Test-Path $directory) ) {
-                New-Item $directory -Type Directory | Out-Null
+            if (! (Test-Path -Path $directory) ) {
+                New-Item -Path $directory -Type Directory | Out-Null
             }
 
-            Write-Verbose "$($Path.FullName) >> $directory"
-            Move-Item $Path.FullName $directory
+            Write-Verbose -Message "$($Path.FullName) >> $directory"
+            Move-Item -Path $Path.FullName -Destination $directory
         }
     }
 }

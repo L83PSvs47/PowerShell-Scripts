@@ -19,7 +19,7 @@ function Get-FileVersionMSI {
     process {
         if ($Path.FullName -like '*.msi') {
             try {
-                [System.__ComObject]$windowsInstaller = New-Object -com WindowsInstaller.Installer
+                [System.__ComObject]$windowsInstaller = New-Object -ComObject WindowsInstaller.Installer
                 [System.__ComObject]$database = $windowsInstaller.GetType().InvokeMember("OpenDatabase", "InvokeMethod", $null, $windowsInstaller, @($Path.FullName, 0))
                 [string]$query = "SELECT Value FROM Property WHERE Property = 'ProductVersion'"
                 [System.__ComObject]$view = $database.GetType().InvokeMember("OpenView", "InvokeMethod", $null, $database, ($query))
@@ -32,7 +32,7 @@ function Get-FileVersionMSI {
             }
 
             $result = [PSCustomObject]@{
-                'Name'           = Split-Path $Path -leaf
+                'Name'           = Split-Path -Path $Path -Leaf
                 'ProductVersion' = $productVersion
             }
 

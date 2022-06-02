@@ -25,10 +25,10 @@ function Write-Log {
 
     [string]$dateTime = (Get-Date).toString('dd.MM.yyyy HH:mm:ss')
     if ($LogPath) {
-        if (!(Test-Path $LogPath)) {
+        if (!(Test-Path -Path $LogPath)) {
             New-Item -ItemType 'File' -Path $LogPath -Force | Out-Null
         }
-        Add-content $LogPath -Value "$dateTime`t[$($Level.ToUpper())]`t$Message"
+        Add-content -Path $LogPath -Value "$dateTime`t[$($Level.ToUpper())]`t$Message"
     }
 
     [string]$consoleMessage = $Message -Replace "`t", ' '
