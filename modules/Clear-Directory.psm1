@@ -10,7 +10,7 @@ Clear-Directory 'C:\Temp' '-1d'
 .EXAMPLE
 Clear-Directory 'C:\Temp\temp.txt' '-1d'
 .EXAMPLE
-Clear-Directory 'C:\Temp' '-7d' -Exclude '*.log', '*.txt' -Verbose
+Clear-Directory 'C:\Temp' '-7d' -Exclude '*.log', '*.txt', '*\test' -Verbose
 .EXAMPLE
 Clear-Directory -Path 'C:\Temp' -Retention '-1M' -WhatIf
 #>
@@ -31,20 +31,21 @@ function Clear-Directory {
         [switch]$WhatIf
     )
 
+    [bool]$notExclude = $null
     [datetime]$dateTime = Get-Date
 
     foreach ($item in (Get-ChildItem -Path $Path -Force)) {
-        $excludeMatch = 0
+        $notExclude = $true
 
         $Exclude | ForEach-Object {
             if ($item.Name -like $_) {
-                $excludeMatch = $excludeMatch + 1
+                $notExclude = $false
             }
         }
 
-        if ($excludeMatch -eq 0) {
+        if ($notExclude) {
             if ($item.Attributes -eq 'Directory') {
-                Clear-Directory -Path $item.FullName -Retention $Retention -WhatIf:$WhatIf
+                Clear-Directory -Path $item.FullName -Retention $Retention -Exclude $Exclude -WhatIf:$WhatIf
             }
             else {
                 if ($item.LastWriteTime -lt (Get-DateTimeOffset -DateTime $dateTime -Offset $Retention)) {
